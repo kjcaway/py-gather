@@ -1,3 +1,9 @@
+"""
+    file: script.py
+    description: this is script that read data and parse/extract new data
+    date: 2023-04-30
+    author: x
+"""
 import sys
 import argparse
 import logging
@@ -17,7 +23,7 @@ export_file = "./out.csv"
 
 def mysql_read():
     try:
-        # DB Connection
+        # connect db
         conn = pymysql.connect(host=host, user=username, passwd=password, db=database, use_unicode=True, charset='utf8')
         cursor = conn.cursor()
 
@@ -25,26 +31,25 @@ def mysql_read():
         logging.exception("failed conn")
         sys.exit(1)
     
-    # SQL문 실행 및 Fetch
+    # execute sql
     sql = "SELECT * FROM tbl_member_detail"
     cursor.execute(sql)
     
-    # 데이타 Fetch, 컬럼명 find
+    # fetch data and extract columns
     rows = cursor.fetchall()
     field_names = [i[0] for i in cursor.description]
 
-    # tuple to list
+    # convert tuple to list
     list = []
     for row in rows:
         list.append(row)
-    
     print(list)
 
-    # list to DataFrame
+    # list to df
     df = pd.DataFrame(list, columns=field_names)
     print(df)
 
-    # to csv
+    # convert df to csv
     df.to_csv(export_file, index = False)
 
     conn.close()
