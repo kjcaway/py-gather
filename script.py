@@ -12,7 +12,7 @@ username = "root"
 password = "1234"
 
 import_file = "./in.csv"
-export_file = "./result.csv"
+export_file = "./out.csv"
 
 
 def mysql_read():
@@ -51,7 +51,9 @@ def mysql_read():
 
 
 def csv_read():
-    print("csv")
+    # read csv file
+    df = pd.read_csv('./in.csv')
+    print(df)
 
 
 """
