@@ -7,6 +7,7 @@
 import sys
 import argparse
 import logging
+import json
 
 import pymysql
 import pandas as pd
@@ -59,6 +60,29 @@ def csv_read():
     # read csv file
     df = pd.read_csv('./in.csv')
     print(df)
+
+    # df to json
+    data_json = df.to_json(orient='table', )
+    print(data_json)
+
+    # load json in python
+    parsed = json.loads(data_json)
+    print(parsed['data'])
+
+    # load stringifying json (deep load json)
+    for idx, data in enumerate(parsed['data']):
+        for field in data.keys():
+            try: 
+                parsed['data'][idx][field] = json.loads(data[field])
+            except:
+                parsed['data'][idx][field] = data[field]
+                continue
+
+    print(parsed['data'])
+
+    # normalize 
+    detail_data = pd.json_normalize(data=parsed['data'])
+    print(detail_data)
 
 
 """
